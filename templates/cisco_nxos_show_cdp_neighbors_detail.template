@@ -1,23 +1,53 @@
-Value Required DEST_HOST (.*)
-Value SYSNAME (.*)
-Value MGMT_IP (.*)
-Value PLATFORM (.*)
-Value REMOTE_PORT (.*)
-Value LOCAL_PORT (.*)
-Value VERSION (.*)
+Value Required NEIGHBOR (\S+?)
+Value SERIAL_NUMBER (\S+)
+Value SYSTEM_NAME (\S+)
+Value VTP_DOMAIN (\S+)
+Value INTERFACE_IPV4 ([0-9\.]+)
+Value List INTERFACE_IPV6 ([0-9A-F:]+)
+Value List INTERFACE_IPV6_TYPE (.+)
+Value VENDOR (\S+)
+Value Required PLATFORM (\S+)
+Value CAPABILITIES (.*)
+Value Required INTERFACE (\S+)
+Value Required LOCAL_INTERFACE (\S+)
+Value HOLDTIME (\d+)
+Value Required OS (\S+?)
+Value CODE_BASE (\S+)
+Value Required OS_VERSION (\S+)
+Value CDP_VERSION (\d)
+Value NATIVE_VLAN (\d+)
+Value DUPLEX ([adefhlpux-]+)
+Value MTU (\d+)
+Value SNMP_LOCATION (.*)
+Value MGMT_IPV4 ([0-9\.]+)
+Value List MGMT_IPV6 ([0-9A-F:]+)
+Value List MGMT_IPV6_TYPE (.+)
 
 Start
-  ^Device ID:${DEST_HOST}
-  ^System Name: ${SYSNAME}
-  ^Mgmt address\(es\): -> GetIP
-  ^Platform: ${PLATFORM},
-  ^Interface: ${LOCAL_PORT}, Port ID \(outgoing port\): ${REMOTE_PORT}
-  ^Version: -> GetVersion
-  ^----- -> Record
+  ^\s*$$
+  ^Device\s+ID:\s*${NEIGHBOR}(\(${SERIAL_NUMBER}\)|)\s*$$
+  ^System\s+Name:\s+${SYSTEM_NAME}\s*$$
+  ^VTP\s+Management\s+Domain\s+Name:\s+${VTP_DOMAIN}\s*$$
+  ^Interface\s+address\(es\):\s*$$ -> NeighIntfAddr
+  ^Version:\s*$$
+  ^.*?(\(|)${OS}(\)|)\s+Software,\s+(\S+\s+Software\s+\(${CODE_BASE}\),\s+|)Version\s+${OS_VERSION}(,\s+RELEASE\s+SOFTWARE\s+\S+|)\s*$$
+  ^Copyright.*$$
+  ^Compiled.*$$
+  ^Advertisement\s+Version:\s+${CDP_VERSION}\s*$$
+  ^Native\s+VLAN:\s+${NATIVE_VLAN}\s*$$
+  ^Duplex:\s+${DUPLEX}\s*$$
+  ^MTU:\s+${MTU}\s*$$
+  ^Physical\s+Location:\s+${SNMP_LOCATION}\s*$$
+  ^Mgmt\s+address\(es\):\s*$$
+  ^\s+IPv4\s+Address:\s+${MGMT_IPV4}\s*$$
+  ^\s+IPv6\s+Address:\s+${MGMT_IPV6}\s+\(${MGMT_IPV6_TYPE}\)\s*$$
+  ^-+\s*$$ -> Record
+  ^.* -> Error "Could not parse line:"
 
-GetIP
-  ^.*IP.+Address: ${MGMT_IP} -> Start
-
-GetVersion
-  ^${VERSION} -> Start
-
+NeighIntfAddr
+  ^\s+IPv4\s+Address:\s+${INTERFACE_IPV4}\s*$$
+  ^\s+IPv6\s+Address:\s+${INTERFACE_IPV6}\s+\(${INTERFACE_IPV6_TYPE}\)\s*$$
+  ^Platform:\s+(${VENDOR}\s+|)${PLATFORM},\s+Capabilities:\s+${CAPABILITIES}\s*$$
+  ^Interface:\s+${INTERFACE},\s+Port\s+ID\s+\(outgoing\s+port\):\s+${LOCAL_INTERFACE}\s*$$
+  ^Holdtime:\s+${HOLDTIME}\s+sec\s*$$
+  ^\s*$$ -> Start

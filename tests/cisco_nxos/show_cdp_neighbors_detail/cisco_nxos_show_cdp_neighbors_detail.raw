@@ -4,6 +4,8 @@ VTP Management Domain Name: null
 
 Interface address(es):
     IPv4 Address: 10.1.100.1
+    IPv6 Address: FD00:0:0:4::5  (global unicast)
+    IPv6 Address: FE80::C802:16FF:FEBC:6  (link-local)
 Platform: cisco WS-C3750-48TS, Capabilities: Router Switch IGMP Filtering
 Interface: mgmt0, Port ID (outgoing port): FastEthernet1/0/32
 Holdtime: 134 sec
@@ -19,6 +21,8 @@ Native VLAN: 100
 Duplex: full
 Mgmt address(es):
     IPv4 Address: 10.1.100.1
+    IPv6 Address: FD00:0:0:4::5  (global unicast)
+    IPv6 Address: FE80::C802:16FF:FEBC:6  (link-local)
 ----------------------------------------
 Device ID:dc-lf03(SAL19069XXX)
 System Name: dc-lf03
