@@ -7,7 +7,7 @@ Value List INTERFACE_IPV6 ([0-9A-F:]+)
 Value List INTERFACE_IPV6_TYPE (.+)
 Value VENDOR (\S+)
 Value Required PLATFORM (\S+)
-Value CAPABILITIES (.*)
+Value CAPABILITIES (.*?)
 Value Required INTERFACE (\S+)
 Value Required LOCAL_INTERFACE (\S+)
 Value HOLDTIME (\d+)
@@ -30,7 +30,8 @@ Start
   ^VTP\s+Management\s+Domain\s+Name:\s+${VTP_DOMAIN}\s*$$
   ^Interface\s+address\(es\):\s*$$ -> NeighIntfAddr
   ^Version:\s*$$
-  ^.*?(\(|)${OS}(\)|)\s+Software,\s+(\S+\s+Software\s+\(${CODE_BASE}\),\s+|)Version\s+${OS_VERSION}(,\s+RELEASE\s+SOFTWARE\s+\S+|)\s*$$
+  ^.*?(\(|)${OS}(\)|)\s+(Software,|Linux)\s+(\S+\s+Software\s+\(${CODE_BASE}\),\s+|)[Vv]ersion\s+${OS_VERSION}(,.*(SOFTWARE|DEPLOYMENT).*|)\s*$$
+  ^Technical\s+Support.*$$
   ^Copyright.*$$
   ^Compiled.*$$
   ^Advertisement\s+Version:\s+${CDP_VERSION}\s*$$
