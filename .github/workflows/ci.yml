@@ -183,8 +183,13 @@ jobs:
             PYTHON_VER=${{ env.PYTHON_VER }}
       - name: "Debug: Show docker images"
         run: "docker image ls"
+      - name: "Get changed files"
+        id: "changed-files"
+        uses: "tj-actions/changed-files@v43"
       - name: "Run Tests"
         run: "poetry run invoke pytest"
+        env:
+          ALL_CHANGED_FILES: "${{ steps.changed-files.outputs.all_changed_files }}"
     needs:
       - "pylint"
   publish_gh:
